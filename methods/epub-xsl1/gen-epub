@@ -1,0 +1,47 @@
+#!/bin/sh
+set -eo pipefail
+SCRIPT_DIR="$(dirname "$0")"
+DST_FN="$1"
+XHTML_DIR="$2"
+
+if [ -z "$DST_FN" -o -z "$XHTML_DIR" ]; then
+  echo >&2 "Usage: $0 <dst-fn> <xhtml-single-dir>"
+  exit 2
+fi
+
+DST_FN="$(realpath "$DST_FN")"
+TMP_DIR="$(mktemp -d "$(pwd)/tmp-epub.XXXXXXXX")"
+function onExit {
+  rm -rf "$TMP_DIR"
+}
+trap onExit EXIT
+
+mkdir -p "$TMP_DIR/META-INF"
+cat <<END > "$TMP_DIR/META-INF/container.xml"
+<container version="1.0" xmlns="urn:oasis:names:tc:opendocument:xmlns:container">
+  <rootfiles>
+    <rootfile full-path="content.opf" media-type="application/oebps-package.xml"/>
+  </rootfiles>
+</container>
+END
+
+echo 'application/epub+zip' > "$TMP_DIR/mimetype"
+
+XHTML_SINGLE_FILE=
+for x in $XHTML_DIR/*.xhtml; do
+  if echo "$x" | grep -qE '\.pretty\.xhtml$'; then
+    continue
+  fi
+  if [ -n "$XHTML_SINGLE_FILE" ]; then
+    echo >&2 "Error: multiple XHTML files?"
+    exit 1
+  fi
+  XHTML_SINGLE_FILE="$x"
+done
+
+xsltproc "$SCRIPT_DIR/epub-package-doc.xsl" "$XHTML_SINGLE_FILE" > "$TMP_DIR/content.opf"
+cp "$XHTML_SINGLE_FILE" "$TMP_DIR/main.xhtml"
+cp "$SCRIPT_DIR/dedoc-xhtml.css" "$TMP_DIR/"
+
+rm -rf "$DST_FN"
+(cd "$TMP_DIR"; zip -qr "$DST_FN" *;)

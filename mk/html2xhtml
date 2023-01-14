@@ -1,0 +1,9 @@
+#!/usr/bin/env python3
+import sys, lxml, html5_parser
+
+s = sys.stdin.buffer.read()
+x = html5_parser.parse(s)
+
+x.attrib['xmlns'] = 'http://www.w3.org/1999/xhtml'
+sys.stdout.buffer.write(b'<?xml version="1.0" encoding="utf-8"?>\n')
+sys.stdout.buffer.write(lxml.etree.tostring(x))

@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eo pipefail
+[ -z "$DEDOC_PATH" ] && DEDOC_PATH="$(cd "$(dirname "$0")/.."; pwd)"
+exec make -f "$DEDOC_PATH/mk/Makefile.std" "$@"

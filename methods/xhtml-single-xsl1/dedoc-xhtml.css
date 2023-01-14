@@ -1,0 +1,7 @@
+@namespace url(http://www.w3.org/1999/xhtml);
+@namespace d url(https://www.devever.net/ns/dedoc);
+
+section { padding-left: 1em; }
+d|p { display: block; }
+
+li p:first-child { margin-top: 0; }

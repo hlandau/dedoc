@@ -1,0 +1,4 @@
+html { text-align: justify; }
+.rng-define, .rng-start { font-family: monospace; white-space: pre; }
+.rng-define a:link, .rng-start a:link { text-decoration: none; }
+section section { padding-left: 2em; }

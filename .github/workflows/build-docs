@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -eo pipefail
+echo ::group::Environment
+export
+echo ::endgroup::
+echo "::group::Building DEDOC schema"
+make -C schema
+echo
+echo "Final build artifacts:"
+(cd schema/build; find . -type f;)
+echo ::endgroup::

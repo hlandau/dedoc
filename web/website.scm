@@ -27,7 +27,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
              (div (@ (class main-wrap))
                (nav (@ (class top-nav))
                  (ul (@ (class rhs))
-                   (li (a (@ (href "#") (class cross-slash-icon-link)) (span) "Hugo Landau")))
+                   (li (a (@ (href "https://www.devever.net/~hl/") (class cross-slash-icon-link)) (span) "Hugo Landau")))
                  (ul (@ (class lhs))
                    (li (a (@ (href ".") (class logotext)) "DEDOC"))
                    (li (a (@ (href "schema/")) "Schema Definition"))
@@ -165,7 +165,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
   `(table
      (tr (th "Name") (th "Description"))
      ,(map (lambda (example-name)
-             `(tr (td (a (@ (href ,(format #f "~a" example-name))) ,example-name)) (td ,(assoc-ref example-descriptions example-name))))
+             `(tr (td (a (@ (href ,(format #f "https://github.com/hlandau/dedoc/tree/master/examples/~a" example-name))) ,example-name)) (td ,(assoc-ref example-descriptions example-name))))
            (example-names))))
 
 (define-public (web-examples)

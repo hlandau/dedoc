@@ -31,7 +31,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
                  (ul (@ (class lhs))
                    (li (a (@ (href ".") (class logotext)) "DEDOC"))
                    (li (a (@ (href "schema/")) "Schema Definition"))
-                   (li (a (@ (href "samples")) "Examples"))
+                   (li (a (@ (href "examples")) "Examples"))
                    (li (a (@ (href "tutorial")) "Getting Started"))
                    (li (a (@ (href "https://github.com/hlandau/dedoc")) "Source"))))
                (div (@ (class swipe-reminder) (hidden ""))
@@ -44,6 +44,9 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
                     ,@body))
 
                (footer (ul
+                  ,(let ((git-short (getenv "GITINFO_SHORT"))
+                        (git-long (getenv "GITINFO_LONG")))
+                     (if git-short `(li (@ (title ,(or git-long ""))) ,git-short) ""))
                   (li (@ (class nodot))
                       (a (@ (class cross-slash-icon-link)
                             (href "https://www.devever.net/~hl/")) (span) "Hugo Landau")))))))))

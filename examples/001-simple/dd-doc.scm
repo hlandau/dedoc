@@ -16,6 +16,4 @@
               (p "This is a paragraph in a section."))
       `(sec (@ (man-section 2)) (hdr (title "somecall"))
               (p "This is a paragraph in a section.")
-              (p "This is a paragraph in a section."))
-
-      )))
+              (p "This is a paragraph in a section.")))))

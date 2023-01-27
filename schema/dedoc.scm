@@ -356,7 +356,7 @@ namespace local = \"\"")
                   ))
 
       (section (h4 "cite")
-        (p "Inline citation. This differs from ink in that the text of the hyperlink is generated automatically.")
+        (p "Inline citation. This differs from link in that the text of the hyperlink is generated automatically.")
         ,(defelem 'cite
                   `(r:attribute (r:name (@ (ns ,ns-xlink)) href) (r:data (@ (type anyURI)))))))
 

@@ -4,6 +4,7 @@ permissions:
   contents: read
 jobs:
   build-documentation:
+    name: Build Documentation
     runs-on: ubuntu-latest
     steps:
       - name: Checkout DEDOC
@@ -14,7 +15,7 @@ jobs:
           nix_path: nixpkgs=channel:nixos-unstable
       - name: Build DEDOC Schema
         run: |
-          nix-shell --run .github/workflows/build-docs -p guile libxml2 libxslt rnv xmlstarlet guile
+          nix-shell --run .github/workflows/build-docs -p guile libxml2 libxslt rnv xmlstarlet guile sass
 
       #- name: Setup GitHub Pages
       #  uses: actions/configure-pages@v2
@@ -24,7 +25,7 @@ jobs:
       - name: Upload GitHub Pages Artifacts
         uses: actions/upload-pages-artifact@v1
         with:
-          path: schema/build
+          path: gh-pages
           # path of the directory containing the static assets, default '_site/'
           # retention-days
           # name: 'github-pages' - artifact name
@@ -34,6 +35,7 @@ jobs:
           # actions/upload-artifact@main (name=name, path=$RUNNER_TEMP/artifact.tar, retention-days=1)
           #
   publish-documentation:
+    name: Publish Documentation
     needs: build-documentation
     if: github.event_name == 'push' && github.ref_name == 'master'
     runs-on: ubuntu-latest

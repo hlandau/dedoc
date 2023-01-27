@@ -5,7 +5,15 @@ export
 echo ::endgroup::
 echo "::group::Building DEDOC schema"
 make -C schema
+echo ::endgroup::
+echo "::group::Building website"
+make -C web
+echo ::endgroup::
+echo "::group::Collecting artifacts"
+mv web/build gh-pages
+mv schema/build gh-pages/schema
 echo
-echo "Final build artifacts:"
+echo "Final GitHub pages output:"
 (cd schema/build; find . -type f;)
+echo
 echo ::endgroup::

@@ -10,10 +10,10 @@ echo "::group::Building website"
 make -C web
 echo ::endgroup::
 echo "::group::Collecting artifacts"
-mv web/build gh-pages
+mv web/build/out gh-pages
 mv schema/build gh-pages/schema
 echo
 echo "Final GitHub pages output:"
-(cd schema/build; find . -type f;)
+(cd gh-pages; find . -type f;)
 echo
 echo ::endgroup::

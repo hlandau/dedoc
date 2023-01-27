@@ -27,7 +27,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
              (div (@ (class main-wrap))
                (nav (@ (class top-nav))
                  (ul (@ (class rhs))
-                   (li (a (@ (href "#") (class cross-slash-icon-link)) "Hugo Landau")))
+                   (li (a (@ (href "#") (class cross-slash-icon-link)) (span) "Hugo Landau")))
                  (ul (@ (class lhs))
                    (li (a (@ (href ".") (class logotext)) "DEDOC"))
                    (li (a (@ (href "schema/")) "Schema Definition"))
@@ -46,7 +46,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
                (footer (ul
                   (li (@ (class nodot))
                       (a (@ (class cross-slash-icon-link)
-                            (href "https://www.devever.net/~hl/")) "Hugo Landau")))))))))
+                            (href "https://www.devever.net/~hl/")) (span) "Hugo Landau")))))))))
 
 ;; DEDOC
 ;;   Index

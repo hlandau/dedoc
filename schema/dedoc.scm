@@ -166,6 +166,8 @@ namespace local = \"\"")
                     ,(defelem 'sec
                               (rref 'universal-attributes)
                               `(r:optional (r:attribute (@ (name man-section)) (r:text)))
+                              `(r:optional (r:attribute (@ (name man-os)) (r:text)))
+                              `(r:optional (r:attribute (@ (name man-volume-title)) (r:text)))
                               `(r:optional (r:attribute (@ (name secno)) (r:text)))
                               (rref 'titledHdr)
                               (zeroOrMore (rref 'BLOCK))

@@ -7,10 +7,13 @@
   <xsl:output method="xml" encoding="UTF-8" indent="no"/>
 
   <xsl:template match="/d:sec">
+    <xsl:variable name="utitle" select="translate(d:hdr/d:title, 'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
     <f:roff><!--
-    --><f:r t="Dd">$Mdocdate: May 26 2019 $</f:r><!--
-    --><f:r t="Dt" xml:space="preserve"><xsl:apply-templates select="d:hdr/d:title"/> <xsl:value-of select="@man-section"/></f:r><!--
-    --><f:r t="Os"/><!--
+    --><!--f:r t="Dd">$Mdocdate: May 26 2019 $</f:r--><!--
+    --><f:r t="ds">doc-volume-operating-system <xsl:apply-templates select="@man-volume-title"/></f:r><!--
+    --><f:r t="ds">doc-volume-ds-<xsl:value-of select="@man-section"/></f:r><!--
+    --><f:r t="Dt" xml:space="preserve"><xsl:value-of select="$utitle"/> <xsl:value-of select="@man-section"/></f:r><!--
+    --><f:r t="Os"><xsl:value-of select="@man-os"/></f:r><!--
     --><f:r t="Sh">NAME</f:r><!--
     --><f:r t="Nm"><xsl:apply-templates select="d:hdr/d:title"/></f:r><!--
     --><f:r t="Nd">format manual pages</f:r><!--

@@ -247,7 +247,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
         ))
 
 (define-public (web-index)
-  (let ((title (string-append "The "_dedoc" Technical Documentation System")))
+  (let ((title (string-append "The "_dedoc" Document Engineering Environment")))
     (page-layout #:title title #:body `((h1 ,title) ,(intro)))))
 
 (define (tutorial)

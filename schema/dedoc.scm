@@ -39,7 +39,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
 (define (document) `(
   (h1 ,(_title))
   (section (@ (id intro)) (h2 "Introduction")
-    (p "This document specifies the DevEver Documentation and Specification Language (DEDOC). DEDOC is an XML schema and markup language intended for the specification of technical specifications, standards and documentation.")
+    (p "This document specifies the DevEver Documentation and Specification Language (DEDOC). DEDOC is an XML schema and markup language intended for the specification of technical specifications, standards and documentation. For more information on DEDOC and its supporting tooling, see "(a (@ (href "https://www.devever.net/~hl/dedoc/")) "the DEDOC website."))
     (p (strong "How DEDOC is specified.") " Note that this specification is itself written as a Guile Scheme program, which, when executed, outputs XHTML with embedded RELAX NG schema definitions. Thus, this document is both human and machine-readable. Generally, the RELAX NG schema will be automatically extracted from this document to facilitate its further use for validation purposes.")
     (p "Because the RELAX NG schema is written as part of this document, this document is the canonical source for the RELAX NG schema definitions for DEDOC. Thus, this document constitutes the normative specification for DEDOC for the purposes of both human-readable and machine-readable expressions.")
     (p "Moreover, the expression of DEDOC herein, in which narrative is interweaved with RELAX NG definitions shown inline, constitutes an application of “literate programming” methodology to XML schema definition. This is directly inspired by other attempts to both apply literate programming to XML schema definition while simultaneously having a single source of truth for schema definition, most notably TEI's “One Document Does It All” (TEI ODD) model.")
@@ -125,6 +125,7 @@ namespace local = \"\"")
                       (xlink:title "RELAX NG compact schema"))
                    (a (@ (href "dedoc.rnc")) "RELAX NG compact schema for this namespace")))
              )
+           (p "For more information on the tooling surrounding DEDOC, see "(a (@ (href "https://www.devever.net/~hl/dedoc/"))"the DEDOC website."))
            )
 
   (section (@ (id overall)) (h2 "Overall Structure")

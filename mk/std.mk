@@ -21,7 +21,7 @@ DEDOC_RNG?=$(DEDOC_COMPILED_SCHEMA_DIR)/dedoc.rng
 DEDOC_RNC?=$(DEDOC_COMPILED_SCHEMA_DIR)/dedoc.rnc
 .DEFAULT_GOAL=all
 
-include $(DEDOC_BASE)/mk/Makefile.support
+include $(DEDOC_BASE)/mk/support.mk
 -include Makefile.config
 METHOD_ALLS=$(patsubst %,method_%_all,$(METHODS))
 
@@ -33,7 +33,7 @@ $(error If more or less than one file named dd-*.scm is in a directory, \
         DOCNAME must be specified explicitly; have "$(DOCNAME)")
 endif
 
-include $(patsubst %,$(DEDOC_BASE)/methods/%/Makefile.inc,$(METHODS))
+include $(patsubst %,$(DEDOC_BASE)/methods/%/method.mk,$(METHODS))
 
 .PHONY: all clean
 all: $(METHOD_ALLS)

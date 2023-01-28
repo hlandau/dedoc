@@ -4,7 +4,7 @@ SRC_DIR=..
 MK_DIR=$(SRC_DIR)/mk
 BUILD_DIR=build
 
-include $(MK_DIR)/Makefile.support
+include $(MK_DIR)/support.mk
 
 all: $(BUILD_DIR)/index.xhtml $(BUILD_DIR)/dedoc.css $(BUILD_DIR)/dedoc.rnc $(BUILD_DIR)/dedoc.rng $(BUILD_DIR)/rng.xsl
 

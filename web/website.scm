@@ -251,7 +251,107 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
     (page-layout #:title title #:body `((h1 ,title) ,(intro)))))
 
 (define (tutorial)
-  `((p "...")))
+  `((p "To get started with "_dedoc" begin by cloning the repsitory:")
+    (pre "$ git clone https://github.com/hlandau/dedoc")
+    (p (strong "Dependencies. ")"You will need to have the following tools available in your environment:")
+    (ul
+      (li "GNU Guile Scheme ("(tt "guile(1)")") (required);")
+      (li "GNU Make v4.4 or later ("(tt "make(1)")") (required) — "(strong "note")" that this is very new and your distro may not have it yet;")
+      (li (tt "xmllint(1)")" (strongly recommended and assumed);")
+      (li (tt "xsltproc(1)")" (strongly recommended and assumed);")
+      (li (tt "rnv(1)")" (strongly recommended and assumed);"))
+    (p "Specific output methods may require additional tools:")
+    (ul
+      (li (tt "xml(1)")", provided by XMLStartlet (for mdoc output and transforms dependent on it);")
+      (li (tt "zip(1)")" (for EPUB support);")
+      (li (tt "groff(1)")" (for groff-based transformations);")
+      (li (tt "mandoc(1)")" (for mandoc-based transformations);")
+      (li "Python 3 with the packages "(tt "lxml")" and "(tt "html5_parser")" (for mandoc-based XHTML output).")
+      )
+    (p "On NixOS, you can get a shell with all the needed dependencies using the following command, though you will need to be using "(tt "nixpkgs")" 23.05 or newer, or unstable:")
+    (pre "\
+$ nix-shell -p guile libxml2 libxslt rnv xmlstarlet zip groff \\
+    mandoc gnumake 'python3.withPackages(p: [p.lxml p.html5-parser])'
+")
+    (p (strong "Basic usage. ")"To compile a document using ",_dedoc", run the "(tt "bin/dedoc")" command while in the directory
+        containing a "(tt "dd-*.scm")" file; alternatively, run "(tt "bin/dedoc -C <dir>")", where
+        "(tt "<dir>")" is the directory containing the "(tt "dd-*.scm")" file. Output will be produced in the "(tt "build/")" directory.")
+    (p "For example, create an empty directory "(tt "tutorial-1")" and place a file named "(tt "dd-tutorial-1.scm")" in it:")
+    (pre "\
+(define-module (dd-tutorial-1))
+(use-modules (dedoc))
+
+(define-public (top)
+  (doc
+    (docctl (title \"Tutorial 1\"))
+    (docbody
+      (sec \"Section Title\"
+        (p \"This is a paragraph.\")))))\
+")
+
+    (p "(You can find more information on the ",_DEDOC" schema in the "(a (@ (href "schema/")) ,_DEDOC" schema specification.")")")
+
+    (p "Now run "(tt "$DEDOC/bin/dedoc")" from that directory, where "(tt "$DEDOC")" is the path
+       you cloned the ",_dedoc" repository to. The output will be produced in the "(tt "build/")" directory.")
+
+    (p (strong "Note: ") "By default, ",_dedoc" uses the "(tt "dd-*.scm")"
+       naming convention to automatically detect which file in a directory is
+       the ",_dedoc.scm" file containing your document source. If you have
+       multiple files of the form "(tt "dd-*.scm")" in a directory, you will
+       need to specify the correct file manually by customising the Makefile
+       options (see below).")
+    (p (strong "Shell shortcut. ") (tt "mk/dedoc-shell.sh")" is a file you can optionally source into your shell to setup
+       an alias for the "(tt "dedoc(1)")" command, sparing you from needing to type the full
+       path to "(tt "bin/dedoc")" every time:")
+    (pre "\
+$ cd some-document/
+$ ls
+dd-some-document.scm
+$ . ~/path/to/dedoc-checkout/mk/dedoc-shell.sh
+$ dedoc")
+
+    (p (strong "Makefile customisation. ") "The part of ",_dedoc" which actually transforms the output
+       ",_DEDOC" XML file into useful output formats is known as the ",_dedoc-methods " collection.
+       This is a Makefile-driven workflow in the UNIX tradition. The workflow has been organised
+       in a highly modular way so that each possible output method has its own makefile in its own subdirectory of the "(tt "$DEDOC/methods")" directory. This is then tied together with a master makefile in the "(tt "$DEDOC/mk")" directory. In fact, invoking "(tt "dedoc(1)")" is actually just a shorthand for invoking GNU Make with this master makefile.")
+
+    (p "You can customise the default settings of the various makefiles by creating a makefile named "(tt "Makefile.config")" in the same directory as your "(tt "dd-*.scm")" file. This is an optional file which, if present, GNU Make will source to allow you to override ",_dedoc-methods"'s default settings.")
+
+    (p "The settings you can override include:")
+    (dl
+      (dt (tt "DOCNAME"))
+      (dd (p "By default, ",_dedoc" automatically determines the filename of your document
+              by looking for a file named in the pattern "(tt "dd-*.scm")". If you have
+              more than one file named this way, this is ambiguous; alternatively, you may
+              not wish to name your source files this way. In this case, you can set this
+              to the source file name explicitly."))
+
+      (dt (tt "BUILD_DIR"))
+      (dd (p "The output build directory. Defaults to "(tt "build/")))
+      (dt (tt "METHODS"))
+      (dd (p "The list of method names to use when creating output files. You can use this
+              to disable some methods or to add your own methods. By default, a reasonable
+              default set of supported methods is listed.")))
+
+    (p "The path to each program needed for the operation of ",_dedoc" can
+        generally be overridden also; see "(tt "mk/support.mk")" for details.")
+
+    (p "Each method may also have its own settings you can override. See the
+       file named "(tt "method.mk")" in each method's directory in the
+       ",_dedoc" source tree for details.")
+
+    (p (strong "Makefile targets. ") "The following make targets are available:")
+    (dl
+      (dt (tt "all"))
+      (dd (p "Build everything."))
+      (dt (tt "clean"))
+      (dd (p "Deletes the build output directory."))
+      (dt (tt "method_NAME_all"))
+      (dd (p "Builds all outputs defined by the method "(tt "NAME")"."))
+      (dt (tt "build/"(em "DOCNAME")".xhtml")" (for example)")
+      (dd (p "You can also instruct make to build a specific build output directly by naming the path of the file which would be produced."))
+      )
+))
 
 (define-public (web-tutorial)
   (page-layout #:title (string-append _dedoc" Tutorial") #:body `(

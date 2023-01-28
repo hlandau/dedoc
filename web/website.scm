@@ -244,7 +244,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
           the dedicated PDF and XHTML methods above.")
 
       (p (strong "Current usage. "),_dedoc" is used to produce the documentation for ",_acmetool".")
-        ))
+      (p "To get started, try the "(a (@ (href "tutorial")) "tutorial")" or examine some of the "(a (@ (href "examples")) "example documents.")" For a more elaborate example of ",_dedoc"'s output, see the "(a (@ (href "https://www.devever.net/~hl/acmetool/")) ,_acmetool" manual."))))
 
 (define-public (web-index)
   (let ((title (string-append "The "_dedoc" Document Engineering Environment")))

@@ -20,3 +20,4 @@ AWK?=awk
 GROFF?=groff
 PS2PDF?=ps2pdf
 MANDOC?=mandoc
+COL?=col

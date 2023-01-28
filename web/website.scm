@@ -17,6 +17,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
 
 (define* (page-layout #:key
                       (title _dedoc)
+                      (logo #f)
                       (body '()))
   `(*TOP*
      (html (@ (@ (*NAMESPACES* (*IMPLICIT* ,ns-xhtml    *IMPLICIT*)))
@@ -34,15 +35,16 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
                    (li (a (@ (href "https://www.devever.net/~hl/") (class cross-slash-icon-link)) (span) "Hugo Landau")))
                  (ul (@ (class lhs))
                    (li (a (@ (href ".") (class logotext)) "dedoc"))
+                   (li (a (@ (href ".")) "Home"))
                    (li (a (@ (href "schema/")) "Schema Definition"))
                    (li (a (@ (href "examples")) "Examples"))
                    (li (a (@ (href "tutorial")) "Getting Started"))
                    (li (a (@ (href "https://github.com/hlandau/dedoc")) "Source"))))
                (div (@ (class swipe-reminder) (hidden ""))
                     (p "⇒ Swipe right for navigation ⇒"))
-               (div (@ (class prealign))
+               ,(if logo `(div (@ (class prealign))
                     (h1 (@ (class logo-img))
-                        "dedoc"))
+                        "dedoc")) "")
                (main
                  (article (@ (class has-logo))
                     ,@body))
@@ -248,7 +250,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
 
 (define-public (web-index)
   (let ((title (string-append "The "_dedoc" Document Engineering Environment")))
-    (page-layout #:title title #:body `((h1 ,title) ,(intro)))))
+    (page-layout #:title title #:logo #t #:body `((h1 ,title) ,(intro)))))
 
 (define (tutorial)
   `((p "To get started with "_dedoc" begin by cloning the repsitory:")
@@ -362,13 +364,29 @@ $ dedoc")
   (filter (lambda (x) (not (string-prefix? "." x))) (scandir "../examples/")))
 
 (define example-descriptions
-  `(("001-simple" . ("Simple example of generating ",_DEDOC" output."))))
+  `(("001-simple" #f ("Simple example of generating ",_DEDOC" output."))
+    ("002-manpages" #t ("Example document which contains embedded man pages, which are automatically extracted and converted into actual man pages during the build process."))))
+
+(define (output-links name)
+  `(ul (@ (class "outputs")) ,@(map (lambda (k) `(li (a (@ (href ,(string-append "example-output/" name "/dd-doc" (car k)))) ,(cdr k)))) `(
+    (".pretty.xml" . "DEDOC XML")
+    (".pdf" . "PDF")
+    (".xhtml-single" . "XHTML (single file)")
+    (".epub" . "EPUB")
+    ,@(if (car (assoc-ref example-descriptions name))
+          '((".mdoc/" . "Man pages — mdoc")
+            (".mdoc-mandoc-txt/" . "Man pages — TXT (mdoc/mandoc)")
+            (".mdoc-roff-txt/" . "Man pages — TXT (mdoc/roff)")
+            (".mdoc-roff-ptxt/" . "Man pages — TXT (Paginated) (mdoc/roff)"))
+          '())))
+       (li (a (@ (href ,(string-append "example-output/" name "/"))) "Other outputs"))))
 
 (define (examples)
-  `(table
-     (tr (th "Name") (th "Description"))
+  `(table (@ (class "examples"))
+     (tr (th "Name") (th "Description and Outputs"))
      ,(map (lambda (example-name)
-             `(tr (td (a (@ (href ,(format #f "https://github.com/hlandau/dedoc/tree/master/examples/~a" example-name))) ,example-name)) (td ,(assoc-ref example-descriptions example-name))))
+             `(tr (td (a (@ (href ,(format #f "https://github.com/hlandau/dedoc/tree/master/examples/~a" example-name))) ,example-name)) (td ,(cdr (assoc-ref example-descriptions example-name))
+                                                                                                                                                   ,(output-links example-name))))
            (example-names))))
 
 (define-public (web-examples)

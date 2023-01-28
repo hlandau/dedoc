@@ -128,3 +128,16 @@ article.has-logo > p:first-child { margin-top: 0.2rem; }
     > ul > li { padding-left: 0.5rem; }
   }
 }
+
+// DEDOC Specific: Examples Table
+.examples { width: 100%; }
+.examples td { vertical-align: top; padding: 0.33rem 0.5rem 0.5rem 0.5rem; }
+.examples tr:nth-child(odd) { background-color: lighten($nav_bg, 6%);
+  td {
+    border-top: solid 1px darken($nav_bg, 22%);
+  }
+  th, td {
+    border-bottom: solid 1px darken($nav_bg, 22%);
+  }
+}
+.examples .outputs { list-style: none; padding: 0; margin: 0; font-size: small; padding-left: 1rem; }

@@ -11,7 +11,7 @@
 
   <xsl:template match="/">
     <xsl:processing-instruction name="xml-stylesheet">href="rng.xsl" type="text/xsl"</xsl:processing-instruction>
-    <r:grammar ns="http://www.devever.net/ns/dedoc" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <r:grammar ns="https://www.devever.net/ns/dedoc" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
       <xsl:apply-templates select="//r:start"/>
       <xsl:apply-templates select="//r:define"/>
     </r:grammar>

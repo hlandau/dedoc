@@ -37,19 +37,19 @@ $(METHOD_TXT_ROFF_MDOC_XSL1_PAGINATED_OUT_DIR)/%.txt: $(METHOD_TXTU_ROFF_MDOC_XS
 $(METHOD_TXTU_ROFF_MDOC_XSL1_NONPAGINATED_OUT_DIR)/%.txt: $(METHOD_MDOC_XSL1_OUT_DIR)/%
 	$(call INFO,GROFF,$@)
 	$(Q)mkdir -p "$(shell dirname "$@")"
-	$(Q)$(GROFF) -mandoc -Tutf8 -dpaper=a4 < "$<" > "$@.tmp"
+	$(Q)$(GROFF) -mdoc -Tutf8 -dpaper=a4 < "$<" > "$@.tmp"
 	$(Q)mv "$@.tmp" "$@"
 
 $(METHOD_TXTU_ROFF_MDOC_XSL1_PAGINATED_OUT_DIR)/%.txt: $(METHOD_MDOC_XSL1_OUT_DIR)/%
 	$(call INFO,GROFF,$@)
 	$(Q)mkdir -p "$(shell dirname "$@")"
-	$(Q)$(GROFF) -mandoc -Tutf8 -dpaper=a4 -rcR=0 < "$<" > "$@.tmp"
+	$(Q)$(GROFF) -mdoc -Tutf8 -dpaper=a4 -rcR=0 < "$<" > "$@.tmp"
 	$(Q)mv "$@.tmp" "$@"
 
 $(METHOD_PS_ROFF_MDOC_XSL1_OUT_DIR)/%.ps: $(METHOD_MDOC_XSL1_OUT_DIR)/%
 	$(call INFO,GROFF,$@)
 	$(Q)mkdir -p "$(shell dirname "$@")"
-	$(Q)$(GROFF) -mandoc -Tps -dpaper=a4 < "$<" > "$@.tmp"
+	$(Q)$(GROFF) -mdoc -Tps -dpaper=a4 < "$<" > "$@.tmp"
 	$(Q)mv "$@.tmp" "$@"
 
 $(METHOD_PDF_PS_ROFF_MDOC_XSL1_OUT_DIR)/%.pdf: $(METHOD_PS_ROFF_MDOC_XSL1_OUT_DIR)/%.ps
@@ -60,5 +60,5 @@ $(METHOD_PDF_PS_ROFF_MDOC_XSL1_OUT_DIR)/%.pdf: $(METHOD_PS_ROFF_MDOC_XSL1_OUT_DI
 $(METHOD_XHTML_ROFF_MDOC_XSL1_OUT_DIR)/%.xhtml: $(METHOD_MDOC_XSL1_OUT_DIR)/%
 	$(call INFO,GROFF,$@)
 	$(Q)mkdir -p "$(shell dirname "$@")"
-	$(Q)$(GROFF) -mandoc -Txhtml < "$<" > "$@.tmp"
+	$(Q)$(GROFF) -mdoc -Txhtml < "$<" > "$@.tmp"
 	$(Q)mv "$@.tmp" "$@"

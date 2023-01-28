@@ -74,7 +74,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
     (ul
       (li (p ,_DEDOC", an "(a (@ (href "schema/")) "XML schema")" for writing high-quality technical documentation
               while targeting multiple different output formats, including
-              XHTML, PDF, EPUB, manpages and plain text, while also being simpler and
+              XHTML, PDF, EPUB, man pages and plain text, while also being simpler and
               more focused than DocBook;"))
       (li (p ,_dedoc.scm", an environment for writing technical documentation in Scheme
               targeting the "DEDOC" schema, providing a friendlier writing
@@ -165,7 +165,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
      (pre ";; Define a term. This can be referenced lexically. All terms are collated
 ;; in a list inside the Scheme environment, and can be mapped over
 ;; programmatically to automatically populate a Definitions section in the
-;; output. The use of lexical referencees to terms ensures integrity of
+;; output. The use of lexical references to terms ensures integrity of
 ;; references and allows the output to contain hyperlinks to definitions, etc.
 (dt table \"table\" \"A table is a surface on which objects can be placed.\")
 

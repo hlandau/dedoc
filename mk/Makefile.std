@@ -9,7 +9,6 @@
 ###############################################################################
 DOCNAME?=
 BUILD_DIR?=build
-SUGGESTED_NIXPKGS?=guile libxml2 libxslt rnv xmlstarlet
 METHODS?=dedoc-guile pdf-context xhtml-single-xsl1 epub-xsl1 mdoc-xsl1 txt-roff-mdoc-xsl1 txt-mandoc-mdoc-xsl1
 
 
@@ -36,7 +35,7 @@ endif
 
 include $(patsubst %,$(DEDOC_BASE)/methods/%/Makefile.inc,$(METHODS))
 
-.PHONY: all enter clean
+.PHONY: all clean
 all: $(METHOD_ALLS)
 
 
@@ -44,6 +43,3 @@ all: $(METHOD_ALLS)
 ###############################################################################
 clean:
 	rm -rf "$(BUILD_DIR)"
-
-enter:
-	nix-shell -p $(SUGGESTED_NIXPKGS)

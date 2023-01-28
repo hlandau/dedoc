@@ -9,7 +9,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
 (define-public ns-xhtml "http://www.w3.org/1999/xhtml")
 
 (define _DEDOC "DEDOC")
-(define _dedoc `(tt "dedoc"))
+(define _dedoc `(tt "dedoc.scm"))
 
 (define* (page-layout #:key
                       (title "DEDOC")
@@ -60,13 +60,15 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
 
 
 (define (intro)
-  `((p "DEDOC is two things:")
+  `((p "DEDOC is three things:")
     (ul
       (li (p ,_DEDOC", an XML schema for writing high-quality technical documentation
               while targeting multiple different output formats, including
               XHTML, PDF, EPUB and plain text;"))
       (li (p ,_dedoc", an environment for writing technical documentation in Scheme
-              targeting the "DEDOC" schema.")))
+              targeting the "DEDOC" schema."))
+      (li (p "a set of makefile-driven methods for converting ",_DEDOC" files to various output formats,
+              such as high-quality PDF, XHTML, EPUB, plain text and man pages.")))
     (p "In short, ",_dedoc" is a system for writing natural-language technical
         documents using Scheme. By using the power of S-expressions, including
         ordinary functions, macros and backquoting, and SXML (the

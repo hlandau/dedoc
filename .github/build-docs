@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eo pipefail
 echo ::group::Environment
+pwd
 export
 echo ::endgroup::
 echo "::group::Building DEDOC schema"
@@ -9,9 +10,22 @@ echo ::endgroup::
 echo "::group::Building website"
 make -C web
 echo ::endgroup::
+echo "::group::Building examples"
+for x in examples/*; do
+  pushd "$x"
+  "$GITHUB_WORKSPACE"/bin/dedoc
+  popd
+done
+echo "::endgroup::"
 echo "::group::Collecting artifacts"
 mv web/build/out gh-pages
 mv schema/build gh-pages/schema
+mkdir -p gh-pages/example-output
+for x in examples/*; do
+  xn="$(basename "$x")"
+  mv "$x/build/out" "gh-pages/example-output/$xn"
+  mv "$x/build/int" "gh-pages/example-output/$xn/.int"
+done
 echo
 echo "Final GitHub pages output:"
 (cd gh-pages; find . -type f;)

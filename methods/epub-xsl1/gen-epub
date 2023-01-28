@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 set -eo pipefail
 SCRIPT_DIR="$(dirname "$0")"
 DST_FN="$1"

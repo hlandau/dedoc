@@ -15,6 +15,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
 (define-public ns-mml     "http://www.w3.org/1998/Math/MathML")
 (define-public ns-rddl    "http://www.rddl.org/")
 (define-public ns-relaxng "http://relaxng.org/ns/structure/1.0")
+(define-public ns-xsd     "http://www.w3.org/2001/XMLSchema-datatypes")
 
 ;; RNG: define a choice between various elements
 (define (defchoice name choices)
@@ -34,6 +35,14 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
 ;; RNG: zero or more of...
 (define (zeroOrMore . args)
   `(r:zeroOrMore ,@args))
+
+;; RNG: optional
+(define (optional . args)
+  `(r:optional ,@args))
+
+;; RNG: interleave
+(define (interleave . args)
+  `(r:interleave ,@args))
 
 ;; The DEDOC specification document with embedded RNG definitions.
 (define (document) `(
@@ -109,7 +118,9 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
            (pre (@ (class rng-prologue))
 "namespace mml = \"http://www.w3.org/1998/Math/MathML\"
 namespace xlink = \"http://www.w3.org/1999/xlink\"
-namespace local = \"\"")
+namespace bib = "https://www.devever.net/ns/bib"
+namespace local = \"\"
+datatypes xsd = \"http://www.w3.org/2001/XMLSchema-datatypes\"")
            (p "This page is RDDL-enabled. The following schema artifacts generated from this document are available:")
            (ul
              (li (rddl:resource
@@ -154,7 +165,39 @@ namespace local = \"\"")
            (section (h3 "docctl")
                     (p "The control information comprises metadata which does not appear in the document body itself, and which should not necessarily be rendered.")
                     ,(defelem 'docctl
-                              (rref 'title)))
+                              (interleave
+                                (rref 'title)
+                                (optional (rref 'buildinfo)))))
+
+           (section (h3 "buildinfo")
+                    (p "Contains information about a build process which produced a DEDOC XML file.")
+                    ,(defelem 'buildinfo
+                              (interleave
+                                (rref 'vcsrevsummary)
+                                (optional (rref 'vcsrev))
+                                (optional (rref 'vcstime)))))
+
+           (section (h3 "vcsrevsummary")
+                     (p "Contains a single-line VCS revision summary. The "(tt "form")" attribute indicates whether a full or abbreviated revision summary is used. For example, a short VCS revision summary might contain only a few hexadecimal characters to cryptographically identify the revision, whereas the long summary may contain the full hash. Note that there is no set form for either of these strings and they are not required to contain only hexadecimal characters.")
+                     (r:define (@ (name "vcsrevsummary"))
+                               (r:interleave (r:optional ,(rref 'vcsrevsummary.long))
+                                             (r:optional ,(rref 'vcsrevsummary.short))))
+                     (r:define (@ (name "vcsrevsummary.long"))
+                               (r:element (@ (name vcsrevsummary))
+                                          (r:attribute (@ (name "form")) (r:value "long"))
+                                          (r:text)))
+                     (r:define (@ (name "vcsrevsummary.short"))
+                               (r:element (@ (name vcsrevsummary))
+                                          (r:attribute (@ (name "form")) (r:value "short"))
+                                          (r:text))))
+
+           (section (h3 "vcsrev")
+                    (p "Contains a full-length cryptographic identifier for the VCS revision from which the DEDOC XML file was built. If the VCS being used does not have a suitable cryptographic identifier, the best available unambiguous identifier should be used. A "(tt "+")" should be appended if the tree was 'dirty' when building, meaning that changes may have been made since the referenced revision.")
+                    ,(defelem 'vcsrev `(r:text)))
+
+           (section (h3 "vcstime")
+                    (p "Contains a timestamp for the VCS revision from which the DEDOC XML file was built.")
+                    ,(defelem 'vcstime `(r:data (@ (type dateTime)))))
 
            (section (h3 "docbody")
                     (p "The document body contains structural constructs.")
@@ -409,7 +452,8 @@ namespace local = \"\"")
                                (rddl       ,ns-rddl      rddl)
                                (d          ,ns-dedoc     d)
                                (xlink      ,ns-xlink     xlink)
-                               (r          ,ns-relaxng   r)))
+                               (r          ,ns-relaxng   r)
+                               (xsd        ,ns-xsd       xsd)))
               (lang en) (xml:lang en))
            (head
              (meta (@ (http-equiv "Content-Type") (content "application/xhtml+xml; charset=utf-8")))
@@ -434,6 +478,12 @@ namespace local = \"\"")
 ;;
 ;; (figure title:sxml body:sxml...) → sxml
 (define-public (figure title . xs) `(figure (hdr (title ,title)) ,@xs))
+
+;; Helper for VCS tagging.
+;;
+;; (vcsrevsummary.long/short summary:str) → sxml
+(define-public (vcsrevsummary.long summary) `(vcsrevsummary (@ (form "long")) summary))
+(define-public (vcsrevsummary.short summary) `(vcsrevsummary (@ (form "short")) summary))
 
 ;; Generates the desired top-level structure for a DEDOC document.
 ;;
@@ -463,7 +513,31 @@ namespace local = \"\"")
 ;; free to apply its own transforms as well.
 ;;
 ;; (postprocess document:sxml-top) → sxml-top
-(define-public (postprocess doc) (number-clauses doc))
+(define-public (postprocess doc) (add-vcs-info (number-clauses doc)))
+
+
+;; DEDOC Support Utilities: Postprocessing: VCS Information                 {{{1
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; This adds Git revision information to a DEDOC document if available.
+
+(define (make-buildinfo)
+  (let ((short (getenv "GITINFO_SHORT"))
+        (long  (getenv "GITINFO_LONG"))
+        (rev   (getenv "GITINFO_REV"))
+        (time  (getenv "GITINFO_TIME")))
+  `(buildinfo
+     ,(if (not (eq? "" short)) `(vcsrevsummary (@ (form short)) ,short) "")
+     ,(if (not (eq? "" long))  `(vcsrevsummary (@ (form long)) ,long) "")
+     ,(if (not (eq? "" rev))   `(vcsrev ,rev) "")
+     ,(if (not (eq? "" time))  `(vcstime ,time) ""))))
+
+(define* (add-vcs-info s)
+     (match s
+            (('docctl . xs)
+             (cons 'docctl (cons (make-buildinfo) xs)))
+            (((? symbol? s) . xs)
+             (cons s (map add-vcs-info xs)))
+            (_ s)))
 
 
 ;; DEDOC Support Utilities: Postprocessing: Section Numbering               {{{1
@@ -537,10 +611,8 @@ namespace local = \"\"")
 ;; Define a Scheme function for a given DEDOC XML element.
 (define (define-elem pfx name)
   (when (not (defined? name)) (begin
-    (primitive-eval `(define (,name . xs) (cons (prefix-sym ',pfx ',name) xs)))
+    (primitive-eval `(define (,name . xs) (cons ',name xs)))
     (primitive-eval `(export ,name)))))
-(define (prefix-sym pfx sym)
-  (string->symbol (string-append ns-dedoc ":" (symbol->string sym))))
 
 ;; Automatically create Scheme functions based on reflecting RNG definitions in
 ;; a SXML document. If a helper has already been manually defined, it is not

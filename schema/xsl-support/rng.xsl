@@ -106,6 +106,15 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="r:interleave">
+    <xsl:copy>
+      interleaving of:
+      <h:ul>
+        <h:li><xsl:apply-templates/></h:li>
+      </h:ul>
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="r:optional">
     <xsl:copy>
       optionally:

@@ -14,6 +14,7 @@ namespace bib = "https://www.devever.net/ns/bib"
 namespace mml = "http://www.w3.org/1998/Math/MathML"
 namespace xlink = "http://www.w3.org/1999/xlink"
 namespace local = ""
+#datatypes xsd = "http://www.w3.org/2001/XMLSchema-datatypes"
 <xsl:apply-templates/></xsl:template>
   <xsl:template match="r:start" xml:space="preserve"><xsl:apply-templates mode="rng"/>
 </xsl:template>

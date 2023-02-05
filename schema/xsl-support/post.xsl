@@ -47,6 +47,20 @@
     </xsl:copy>
   </xsl:template>
 
+  <xsl:template match="r:interleave">
+    <xsl:param name="indent" select="''"/>
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <h:span class="rng-interleave">
+        <xsl:for-each select="node()">
+          <xsl:apply-templates select="."><xsl:with-param name="indent" select="concat($indent, '  ')"/></xsl:apply-templates>
+          <xsl:if test="position() != last()"><h:span class="rng-lint"> &amp;
+<xsl:value-of select="$indent"/></h:span></xsl:if>
+        </xsl:for-each>
+      </h:span>
+    </xsl:copy>
+  </xsl:template>
+
   <xsl:template match="r:choice">
     <xsl:param name="indent" select="''"/>
     <xsl:copy>

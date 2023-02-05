@@ -9,7 +9,7 @@
 ###############################################################################
 DOCNAME?=
 BUILD_DIR?=build
-METHODS?=dedoc-guile pdf-context xhtml-single-xsl1 epub-xsl1 mdoc-xsl1 txt-roff-mdoc-xsl1 txt-mandoc-mdoc-xsl1
+METHODS?=dedoc-guile pdf-context xhtml-single-xsl1 epub-xsl1 mdoc-xsl1 txt-roff-mdoc-xsl1 txt-mandoc-mdoc-xsl1 fo-xsl1 pdf-fop-fo-xsl1
 
 
 ## INTERNAL CONFIGURATION

@@ -125,13 +125,13 @@ datatypes xsd = \"http://www.w3.org/2001/XMLSchema-datatypes\"")
            (ul
              (li (rddl:resource
                    (@ (xlink:role "http://relaxng.org/ns/structure/1.0")
-                      (xlink:archole "http://www.rddl.org/purposes#schema-validation")
+                      (xlink:arcrole "http://www.rddl.org/purposes#schema-validation")
                       (xlink:href "dedoc.rng")
                       (xlink:title "RELAX NG schema"))
                    (a (@ (href "dedoc.rng")) "RELAX NG schema for this namespace")))
              (li (rddl:resource
                    (@ (xlink:role "http://www.isi.edu/in-notes/iana/assignments/media-types/application/relax-ng-compact-syntax")
-                      (xlink:arcrole "http://www.rddl.org/purposes#schema-vaidation")
+                      (xlink:arcrole "http://www.rddl.org/purposes#schema-validation")
                       (xlink:href "dedoc.rnc")
                       (xlink:title "RELAX NG compact schema"))
                    (a (@ (href "dedoc.rnc")) "RELAX NG compact schema for this namespace")))

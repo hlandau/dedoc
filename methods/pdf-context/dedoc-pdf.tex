@@ -1,52 +1,27 @@
+% vim: fdm=marker fdl=0
 \usemodule[mathml]
-\xmlregisterdocumentsetup{dedoc}{xs:base}
-\xmlregisterns{s}{https://www.devever.net/ns/dedoc}
-\xmlregisterns{bib}{https://www.devever.net/ns/bib}
-
 
 %% XML TRANSLATION                                                         {{{1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\xmlregisterdocumentsetup{dedoc}{xs:base}
+\xmlregisterns{s}{https://www.devever.net/ns/dedoc}
+
 \startxmlsetups xs:base
-  %\xmlsetsetup{#1}{*}{-}
-  \xmlsetsetup{#1}{s:top|s:doc|s:docctl|s:docinfo|s:docbody|s:doccontent|s:docproper|s:docmain|s:docannex|s:clause|s:annex|s:p|s:title|s:code|s:tt|s:figure|s:tex|s:math2|s:pre|s:footnote|s:iref|s:ul|s:ol|s:li|s:hdr|s:termdef|s:em|s:procn|s:proword|s:term|s:table|s:fig-output|s:cite|xs:bitrange|xs:field|xs:reg|xs:regblock|s:part|s:dedication|s:tp|s:dict|s:dice|s:dick|s:dicb|s:bq|s:typeref|s:procref|s:span|s:tabular|s:tr|s:td|s:th|s:table|s:typepage|s:tpsynopsys|s:tpdescription|s:tpalso|s:description|s:dualcolumn|s:procpage|s:ppsynopsys|s:ppdescription|s:ppargs|s:ppprecon|s:ppalso|s:unchecked|s:pparg|s:ppword|s:argref|s:pppostcon|s:conlist|s:ppret|s:ppworld|s:pparglist|s:inlpfx|s:listing}{xs:*}
-  \xmlsetsetup{#1}{s:fig}{xs:figother}
-  \xmlsetsetup{#1}{s:fig[@type="tex"]}{xs:figtex}
-
-  \xmlsetsetup{#1}{s:clause/s:clause}{xs:clause2}
-  \xmlsetsetup{#1}{s:clause/s:clause/s:clause}{xs:clause3}
-  \xmlsetsetup{#1}{s:clause/s:clause/s:clause/s:clause}{xs:clause4}
-  \xmlsetsetup{#1}{s:clause/s:clause/s:clause/s:clause/s:clause}{xs:clause5}
-  \xmlsetsetup{#1}{s:clause/s:clause/s:clause/s:clause/s:clause/s:clause}{xs:clause6}
-
-  \xmlsetsetup{#1}{s:annex/s:clause}{xs:clause2}
-  \xmlsetsetup{#1}{s:annex/s:clause/s:clause}{xs:clause3}
-  \xmlsetsetup{#1}{s:annex/s:clause/s:clause/s:clause}{xs:clause4}
-  \xmlsetsetup{#1}{s:annex/s:clause/s:clause/s:clause/s:clause}{xs:clause5}
-  \xmlsetsetup{#1}{s:annex/s:clause/s:clause/s:clause/s:clause/s:clause}{xs:clause6}
-
-  \xmlsetsetup{#1}{s:dict[@kind="also-grouped"]//s:dice}{xs:dicealsogrouped}
-  \xmlsetsetup{#1}{s:dict[@kind="also"]}{xs:dictalso}
-  \xmlsetsetup{#1}{s:dict[@kind="also"]//s:dice}{xs:dicealso}
-  \xmlsetsetup{#1}{s:tpalso//s:ul}{xs:ulalso}
-
-  \xmlsetsetup{#1}{bib:set|bib:entry}{xbib:*}
-
-  %\xmlfilter{#1}{omt:*/function(remapopenmath)}
-  %\xmlfilter{#1}{mml:bind/function(remapmmlbind)}
-  %\xmlfilter{#1}{mml:csymbol/function(remapmmlcsymbol)}
-  %\xmlsetsetup{#1}{mml:*}{mml:*}
-  %\xmlsetsetup{#1}{mml:apply/mml:apply/mml:inverse/../..}{mml:apply:inverse}
-  %\xmlstrip{#1}{(mml:mi|mml:mo|mml:mn|mml:csymbol)}
-  %\xmlstripanywhere{#1}{!pre}
-\stopxmlsetups
-
-\startxmlsetups xs:top
-  \xmlflush{#1}
+  \xmlsetsetup{#1}{s:doc|s:docbody|s:sec|s:hdr|s:p|s:ul|s:ol|s:li|s:dict|s:dice|s:dick|s:dicb|s:listing|s:tex|s:em|s:tt|s:footnote|s:proword|s:procn|s:kw}{xs:*}
+  \xmlsetsetup{#1}{s:sec}{xs:sec1}
+  \xmlsetsetup{#1}{s:sec/s:sec}{xs:sec2}
+  \xmlsetsetup{#1}{s:sec/s:sec/s:sec}{xs:sec3}
+  \xmlsetsetup{#1}{s:sec/s:sec/s:sec/s:sec}{xs:sec4}
+  \xmlsetsetup{#1}{s:sec/s:sec/s:sec/s:sec/s:sec}{xs:sec5}
+  \xmlsetsetup{#1}{s:sec/s:sec/s:sec/s:sec/s:sec/s:sec}{xs:sec6}
 \stopxmlsetups
 
 \startxmlsetups xs:doc
-  \xdef\DocTitle{\xmltext{#1}{/s:docctl/s:docinfo/s:doctitle}}
-  \xdef\DocRevision{\xmlatt{#1}{revision}}
+  \xdef\DocTitle{\xmltext{#1}{/s:docctl/s:title}}
+  \xdef\DocRevSummaryLong{\xmltext{#1}{/s:docctl/s:buildinfo/s:vcsrevsummary[@form='long']}}
+  \xdef\DocRevSummaryShort{\xmltext{#1}{/s:docctl/s:buildinfo/s:vcsrevsummary[@form='short']}}
+  \xdef\DocRev{\xmltext{#1}{/s:docctl/s:buildinfo/s:vcsrev}}
+  \xdef\DocTime{\xmltext{#1}{/s:docctl/s:buildinfo/s:vcstime}}
   \setvariables[document][title={\DocTitle}]
 
   % Set PDF metadata.
@@ -54,7 +29,7 @@
   \setupinteractionscreen[option=bookmark]
   \placebookmarks[chapter,section,subsection,subsubsection]
 
-  %% Cover Page                                                             {{{1
+  %% Cover Page                                                             {{{2
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \noheaderandfooterlines
   \begingroup
@@ -68,7 +43,7 @@
     \definelayer[cover][x=0mm,y=0mm,width=\paperwidth,height=\paperheight]
     \setlayer[cover]{%
     \starttikzpicture[overlay]
-      %% Fill white page with white. Ensure TikZ doesn't relativise our coordinates.
+      %% Fill white page with white. Ensure TikZ desn't relativise our coordinates.
       \fill[fill=white] (0,0) rectangle (210mm,-297mm);
 
       %% Document title.
@@ -88,11 +63,11 @@
 
       %% Document control information.
       \draw[anchor=south west,align=left] (5\bodyfontsize,-281mm) node[fill=white,draw=black,inner sep=5mm] {{\tt //devever.net/...}
-        \doifelse{\DocRevision}{}{}{\\ Revision \DocRevision}%
-        %Revision 2021-01-01 ({\tt deadbeef})
+        \doifelse{\DocRevSummaryShort}{}{}{\\ \DocRevSummaryShort}%
       };
     \stoptikzpicture%
     }
+
     \setupbackgrounds[page][background=cover]
     \popcatcodetable
 
@@ -101,12 +76,12 @@
     \stopstandardmakeup
   \endgroup
 
-  %% Copyright Page                                                         {{{1
+  %% Copyright Page                                                         {{{2
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   \begingroup
     \startstandardmakeup[pagestate=start] % Ensure page is numbered
     \vfill
-    \xmlfirst{#1}{/s:docctl/s:docinfo/s:dedication}
+    %\xmlfirst{#1}{/s:docctl/s:docinfo/s:dedication}
     \vfill
     Feedback, errata: {\tt hlandau@devever.net}
 
@@ -114,14 +89,13 @@
 
     {\tt //devever.net/...}\endgraf
 
-    \doifelse{\DocRevision}{}{}{\\ Revision \DocRevision}%
-    %Revision 2021-01-01 ({\tt deadbeef})
+    \doifelse{\DocRevSummaryLong}{}{}{\\ {\tt \DocRevSummaryLong} (\cldcontext{string.sub([[\DocTime]],1,10)})}%
     \vskip5mm
 
-    System \ConTeXt{}
+    System \ConTeXt{} · \DEDOC{}
     \vskip5mm
 
-    © \doifelse{\DocRevision}{}{}{\cldcontext{string.sub([[\DocRevision]],1,4)}} Hugo Landau
+    © \doifelse{\DocTime}{}{}{\cldcontext{string.sub([[\DocTime]],1,4)}} Hugo Landau
 
     \stopstandardmakeup
   \endgroup
@@ -129,247 +103,127 @@
   \title{Table of Contents}
   \placecontent
 
-  %%                                                                        {{{1
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  
-  \xmlfirst{#1}{/s:docctl/s:docinfo/bib:set}
   \xmlfirst{#1}{/s:docbody}
 \stopxmlsetups
-
-\startxmlsetups xs:docctl
-\xmlflush{#1}%
-\stopxmlsetups
-
-\startxmlsetups xs:docinfo
-\xmlflush{#1}%
-\stopxmlsetups
+  %% }}}2
 
 \startxmlsetups xs:docbody
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:doccontent
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:docproper
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:docmain
-\startbodymatter%
-\xmlflush{#1}%
-\stopbodymatter%
-\stopxmlsetups
-
-\startxmlsetups xs:docannex
-\startappendices%
-\xmlflush{#1}%
-\stopappendices%
-\stopxmlsetups
-
-\startxmlsetups xs:part
-\part{\xmlfirst{#1}{/s:hdr/s:title}}%
 \xmlflush{#1}%
 \stopxmlsetups
 
-%% DO NOT put \reference outside of a margin note. Placed after the heading command, it causes a single space to appear before the first paragraph. Placed before it, it randomly causes an empty line to appear to appear above the heading. I spent an entire day debugging this.
-\startxmlsetups xs:clause
+%% DO NOT put \reference outside of a margin note. Placed after the heading
+%% command, it causes a single space to appear before the first paragraph. Placed
+%% before it, it randomly causes an empty line to appear to appear above the
+%% heading. I spent an entire day debugging this.
+\startxmlsetups xs:sec1
 \chapter[id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}%
 \inleftmargin{\reference[idpfx:\xmlattribute{#1}{.}{id}]{§ }}%
 \xmlflush{#1}%
 \stopxmlsetups
 
-\startxmlsetups xs:clause2
+\startxmlsetups xs:sec2
 \section[id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}%
 \inleftmargin{\reference[idpfx:\xmlattribute{#1}{.}{id}]{§ }}%
 \xmlflush{#1}%
 \stopxmlsetups
 
-\startxmlsetups xs:clause3
+\startxmlsetups xs:sec3
 \subsection[id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}%
 \inleftmargin{\reference[idpfx:\xmlattribute{#1}{.}{id}]{§ }}%
 \xmlflush{#1}%
 \stopxmlsetups
 
-\startxmlsetups xs:clause4
+\startxmlsetups xs:sec4
 \subsubsection[id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}%
 \inleftmargin{\reference[idpfx:\xmlattribute{#1}{.}{id}]{§ }}%
 \xmlflush{#1}%
 \stopxmlsetups
 
-\startxmlsetups xs:clause5
+\startxmlsetups xs:sec5
 \subsubsubsection[id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}%
 \inleftmargin{\reference[idpfx:\xmlattribute{#1}{.}{id}]{§ }}%
 \xmlflush{#1}%
 \stopxmlsetups
 
-\startxmlsetups xs:clause6
+\startxmlsetups xs:sec6
 \subsubsubsubsection[id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}%
 \inleftmargin{\reference[idpfx:\xmlattribute{#1}{.}{id}]{§ }}%
 \xmlflush{#1}%
 \stopxmlsetups
 
-\startxmlsetups xs:annex
-\chapter[id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}%
-\inleftmargin{\reference[idpfx:\xmlattribute{#1}{.}{id}]{§ }}%
-\xmlflush{#1}%
+\startxmlsetups xs:hdr
 \stopxmlsetups
 
 \startxmlsetups xs:p
 \xmlflush{#1}\par%
 \stopxmlsetups
 
-\startxmlsetups xs:tp
-\hpara{\xmlfirst{#1}{/s:hdr/s:title}}
-\xmlflush{#1}%
-\stopxmlsetups
+\startluacode
+function document.addfunnyhyphen(tfmdata)
+  local underscore = utf.byte("_")
+  local char = tfmdata.characters[underscore]
+  if not char then return end
+  tfmdata.characters[0xFE000] = {
+    width = 0,
+    height = 0,
+    depth = 0,
+    commands = {
+      { "right", -char.width },
+      {  "down", char.depth },
+      { "slot", 1, underscore },
+    }
+  }
+end
 
-\startxmlsetups xs:tt
-{\tt \xmlflush{#1}}
-\stopxmlsetups
+--utilities.sequencers.appendaction("aftercopyingcharacters", "after", "document.addfunnyhyphen")
 
-\startxmlsetups xs:code
-{\tt \xmlflushspacewise{#1}}
-\stopxmlsetups
+local shared = {
+  start = 1,
+  length = 1,
+  --before = utf.char(0xFE000),
+  after = nil,
+  left = false,
+  right = false,
+}
 
-\startxmlsetups xs:title
-\xmlflush{#1}%
-\stopxmlsetups
+local all = table.setmetatableindex({}, function(t, k)
+  return shared
+end)
 
-\startxmlsetups xs:description
-\xmlflush{#1}%
-\stopxmlsetups
+languages.hyphenators.traditional.installmethod("foo", function(dictionary, word, n)
+  return all
+end)
 
-\startxmlsetups xs:figure
-\placefigure[force][id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}{ \xmlflush{#1} }%
-\inleftmargin{\reference[idpfx:\xmlatt{#1}{id}]{Figure }}%
-\stopxmlsetups
-
-\startxmlsetups xs:table
-\placetable[force][id:\xmlatt{#1}{id}]{\xmlfirst{#1}{/s:hdr/s:title}}{ \xmlflush{#1} }%
-\inleftmargin{\reference[idpfx:\xmlatt{#1}{id}]{Table }}%
-\stopxmlsetups
-
-\startxmlsetups xs:tex
-\xmlflushcontext{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:pre
-{\tt \xmlflushspacewise{#1}}\par
-\stopxmlsetups
+function xml.functions.processListing(t)
+  buffers.assign("listingBuf", "\\begingroup\\starttyping[lines=hyphenated]\n" .. tostring(xml.text(t)) .. "\n\\stoptyping\\endgroup")
+  context.getbuffer { "listingBuf" }
+end
+\stopluacode
+%\definehyphenationfeatures[foo][characters=all,alternative=foo,righthyphenchar="FE000]
 
 \startxmlsetups xs:listing
-{\tt \xmlflushspacewise{#1}}\par
-\stopxmlsetups
-
-\startxmlsetups xs:math2
-%\pushcatcodetable%
-%\setcatcodetable\ctxcatcodes%
-$\xmlflushcontext{#1}$
-%\popcatcodetable%
-\stopxmlsetups
-
-\startxmlsetups xs:footnote
-\footnote{\xmlflush{#1}}
-\stopxmlsetups
-
-\startxmlsetups xs:hdr
-\stopxmlsetups
-
-\def\iref#1{%
-\goto{\ref[title][idpfx:#1]\ref[number][id:#1] (\ref[title][id:#1])}[id:#1]%
-}
-
-\def\irefshort#1{%
-\goto{\ref[title][idpfx:#1]\ref[number][id:#1]}[id:#1]%
-}
-
-\startxmlsetups xs:iref
-\csname iref\xmlatt{#1}{fmt}\endcsname{\xmlatt{#1}{iref}}%
+\pushcatcodetable
+\setcatcodetable\ctxcatcodes
+\xmlfunction{#1}{processListing}
+\popcatcodetable
+%{\tt \xmlflush{#1}}\par%
+%{\tt \xmlflushspacewise{#1}}\par%
 \stopxmlsetups
 
 \startxmlsetups xs:ul
-  \startitemize%
-    \xmlflush{#1}%
-  \stopitemize%
+\startitemize%
+\xmlflush{#1}%
+\stopitemize
 \stopxmlsetups
 
-\startxmlsetups xs:ulalso
-  \startAlsoList \xmlflush{#1} \stopAlsoList%
-\stopxmlsetups
-
-\startxmlsetups xs:ol
-  \startitemize[n]%
-    \xmlflush{#1}%
-  \stopitemize%
+\startxmlsetups xs:ul
+\startitemize[n]%
+\xmlflush{#1}%
+\stopitemize
 \stopxmlsetups
 
 \startxmlsetups xs:li
-  \startitem \xmlflush{#1} \stopitem%
-\stopxmlsetups
-
-\startxmlsetups xs:termdef
-  \masksection{\xmlfirst{#1}{/s:hdr/s:title}}
-  \reference[term:\xmlatt{#1}{sym}]{}
-  \reference[term:\xmlatt{#1}{sym}s]{}
-  \xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:em
-  {\it \xmlflush{#1}}
-\stopxmlsetups
-
-\startxmlsetups xs:inlpfx
-{\bf \xmlflush{#1}}
-\stopxmlsetups
-
-\startxmlsetups xs:procn
-  {\sc \xmlflush{#1}}
-\stopxmlsetups
-
-\startxmlsetups xs:proword
-  {\bf \xmlflush{#1}}
-\stopxmlsetups
-
-\startxmlsetups xs:term
-  \goto{\color[termgreen]{\xmlflush{#1}}}[term:\xmlatt{#1}{sym}]
-\stopxmlsetups
-
-\startxmlsetups xs:table
-  \startplacetable[title={\xmlfirst{#1}{/s:hdr/s:title}}]
-    \xmlflush{#1}
-  \stopplacetable
-\stopxmlsetups
-
-\startxmlsetups xs:figtex
-\startalignment[middle]%
-\xmlcontext{#1}{/s:fig-src}
-\stopalignment%
-\stopxmlsetups
-
-\def\starttz{\setcatcodetable\ctxcatcodes\starttikzpicture}
-\def\stoptz{\stoptikzpicture}
-
-\startxmlsetups xs:figother
-  \xmlfirst{#1}{/s:fig-outputs/s:fig-output[@type="application/pdf"]}
-\stopxmlsetups
-
-\startxmlsetups xs:fig-output
-  \xdef\FigFn{\xmlatt{#1}{href}}
-  \externalfigure[\FigPath\FigFn]
-\stopxmlsetups
-
-\def\xscite#1{%
-\cite[authoryear][#1]%
-}
-
-\def\xscited#1{%
-\cite[authoryears][#1]%
-}
-
-\startxmlsetups xs:cite
-\csname xscite\xmlatt{#1}{fmt}\endcsname{\xmlatt{#1}{iref}}%
+\startitem \xmlflush{#1} \stopitem%
 \stopxmlsetups
 
 \startxmlsetups xs:dict
@@ -380,26 +234,6 @@ $\xmlflushcontext{#1}$
 \startdesc{\xmlfirst{#1}{/s:dick}}%
 \xmlfirst{#1}{/s:dicb}%
 \stopdesc%
-\stopxmlsetups xs:dice
-
-\startxmlsetups xs:dicealsogrouped
-\startAlsoGroupedDesc{\xmlfirst{#1}{/s:dick}}%
-\xmlfirst{#1}{/s:dicb}%
-\stopAlsoGroupedDesc%
-\stopxmlsetups
-
-\startxmlsetups xs:dictalso
-\bTABLE[frame=off,offset=0mm]
-\xmlflush{#1}%
-\eTABLE%
-\stopxmlsetups
-
-\startxmlsetups xs:dicealso
-\bTR\bTD%
-\xmlfirst{#1}{/s:dick}%
-\eTD\bTD
-\xmldoifelseempty{#1}{/s:dicb}{}{\quad — \xmlfirst{#1}{/s:dicb}}%
-\eTD\eTR
 \stopxmlsetups
 
 \startxmlsetups xs:dick
@@ -410,274 +244,85 @@ $\xmlflushcontext{#1}$
 \xmlflush{#1}%
 \stopxmlsetups
 
-\startxmlsetups xs:bq
-\startblockquote%
-\xmlflush{#1}%
-\stopblockquote%
+\startxmlsetups xs:tex
+\xmlflushcoontext{#1}%
 \stopxmlsetups
 
-\startxmlsetups xs:typeref
-\goto{\tt \xmlflush{#1}}[type:#1]%
+\startxmlsetups xs:em
+  {\it \xmlflush{#1}}
 \stopxmlsetups
 
-\startxmlsetups xs:procref
-\goto{\tt \xmlflush{#1}}[proc:#1]%
+\startxmlsetups xs:tt
+  {\tt \xmlflush{#1}}
 \stopxmlsetups
 
-\startxmlsetups xs:span
-\xmlflush{#1}%
+\startxmlsetups xs:footnote
+\footnote{\xmlflush{#1}}%
 \stopxmlsetups
 
-\startxmlsetups xs:tabular
-\bTABLE
-\xmlflush{#1}
-\eTABLE
+\startxmlsetups xs:proword
+  {\bf \xmlflush{#1}}
 \stopxmlsetups
 
-\startxmlsetups xs:tr
-\bTR \xmlflush{#1} \eTR
+\startxmlsetups xs:procn
+  {\sc \xmlflush{#1}}
 \stopxmlsetups
 
-\startxmlsetups xs:td
-\bTD \xmlflush{#1} \eTD
+\startxmlsetups xs:kw
+  {\tt \xmlflush{#1}}
 \stopxmlsetups
 
-\startxmlsetups xs:th
-\bTD {\bf \xmlflush{#1}} \eTD
-\stopxmlsetups
+%math (inline)
+%  tex
+%  <mml:math/>
 
-\def\TypeBefore{TYPE }
-\startxmlsetups xs:typepage
-\refsection{\xmlfirst{#1}{/s:hdr/s:title}}%
-%\writetolist[subsection]{}{\hskip10mm {\tt t.} \xmlfirst{#1}{/s:hdr/s:title}}%
-\xmlfirst{#1}{/s:hdr/s:description}\par%
-\xmlflush{#1}%
-\vfill%
-\stopxmlsetups
-
-\startxmlsetups xs:tpsynopsys
-{\tt \xmlflushspacewise{#1}}\par
-%\vskip2mm
-\stopxmlsetups
-
-\startxmlsetups xs:tpdescription
-\refsubsection{DESCRIPTION}
-%\subsubject{DESCRIPTION}
-\vskip-1.8mm
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:tpalso
-\vbox{%
-\refsubsection{SEE ALSO}
-%\subsubject{SEE ALSO}
-\vskip-1.8mm
-\xmlflush{#1}%
-}%
-\stopxmlsetups
-
-\startxmlsetups xs:procpage
-\refsection{\xmlfirst{#1}{/s:hdr/s:title}}
-%\writetolist[subsection]{}{\hskip10mm {\tt p.} \xmlfirst{#1}{/s:hdr/s:title}}
-\xmlfirst{#1}{/s:hdr/s:description}\par
-\xmlflush{#1}
-\vfill
-\stopxmlsetups
-
-\startxmlsetups xs:ppsynopsys
-{\tt \xmlflushspacewise{#1}}\par
-%\vskip2mm
-\stopxmlsetups
-
-\startxmlsetups xs:ppdescription
-\refsubsection{DESCRIPTION}
-\vskip-1.8mm
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:argref
-{\tt \xmlflush{#1}}%
-\stopxmlsetups
-
-\xmldoifelseempty{#1}{/s:dicb}{}{\quad — \xmlfirst{#1}{/s:dicb}}%
-
-\startxmlsetups xs:ppargs
-\refsubsection{\xmldoifelseempty{#1}{/s:hdr/s:title}{ARGUMENTS}{\WORDS{\xmlfirst{#1}{/s:hdr/s:title}}}}
-\vskip-1.8mm%
-\xmlflush{#1}%
-\stopxmlsetups
-
-\startxmlsetups xs:pparglist
-\startCompactList%
-\xmlflush{#1}%
-\stopCompactList%
-\stopxmlsetups
-
-\startxmlsetups xs:pparg
-\startitem {\tt \xmlfirst{#1}{/s:hdr/s:title}} — \xmlflush{#1} \stopitem%
-\stopxmlsetups
-
-\startxmlsetups xs:ppword
-{\it \xmlflush{#1}}%
-\stopxmlsetups
-
-\startxmlsetups xs:ppprecon
-\refsubsection{PRECONDITIONS}
-\vskip-1.8mm
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:pppostcon
-\refsubsection{POSTCONDITIONS}
-\vskip-1.8mm
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:conlist
-\startCompactList
-\xmlflush{#1}
-\stopCompactList
-\stopxmlsetups
-
-\startxmlsetups xs:unchecked
-\startitem {\tt \xmlflush{#1}} (unchecked) \stopitem
-\stopxmlsetups
-
-\startxmlsetups xs:ppret
-\refsubsection{RETURN VALUE}
-\vskip-1.8mm
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:ppworld
-\refsubsection{WORLD CONSIDERATIONS}
-\vskip-1.8mm
-\xmlflush{#1}
-\stopxmlsetups
-
-\startxmlsetups xs:ppalso
-\refsubsection{SEE ALSO}
-\vskip-1.8mm
-\xmlflush{#1}%
-\stopxmlsetups
-
-\startxmlsetups xs:dualcolumn
-\startcolumns[n=2]
-\xmlflush{#1}%
-\stopcolumns
-\stopxmlsetups
-
-\startxmlsetups xs:dedication
-\xmlflush{#1}%
-\stopxmlsetups
-
-\startxmlsetups xs:regblock
-  {\bf \xmlfirst{#1}{/s:title} (\xmlfirst{#1}{/s:mnem})}\endgraf
-
-  \xmlall{#1}{/s:reg}
-%       <regblock>
-%                <mnem>CTLR</mnem>
-%                <title>Controller Registers</title>
-%                <reg>
-%                  <mnem>CAP</mnem>
-%                  <title>Controller Capabilities</title>
-%                  <rb-offset>   0h</rb-offset>
-%                  <rb-width>64</rb-width>
-%                  <rb-access>ro</rb-access>
-%                  <field>
-%                    <mnem>MQES</mnem>
-%                    <bitrange>
-%                      <br-lo>0</br-lo>
-%                      <br-hi>15</br-hi>
-%                    </bitrange>
-%                    <rb-access>ro</rb-access>
-%                    <rb-title>Maximum Queue Entries Supported</rb-title>
-%                    <rb-desc>This field indicates the maximum individual queue size that the controller supports. This value applies to each of the I/O Submission and I/O Completion Queues that host software may create. This is a zeroes-based value. The minimum value is 1, indicating two entries.</rb-desc>
-%                  </field>
-%
-\stopxmlsetups
-
-\startxmlsetups xs:reg
-  \hskip.05\textwidth{\bf \xmlfirst{#1}{/s:title} (\xmlfirst{#1}{/s:mnem})}\hfill \xmlfirst{#1}{/s:rb-offset}
-  \starttabulate[|rw(.1\textwidth)|p|]
-  \xmlall{#1}{/s:field}
-  \stoptabulate
-\stopxmlsetups
-
-\startxmlsetups xs:field
-  \NC \xmlfirst{#1}{/s:bitrange} \NC {\bf \xmlfirst{#1}{/s:mnem}} (\xmlfirst{#1}{/s:rb-title}) \NC\NR
-  \NC \NC \xmlfirst{#1}{/s:rb-desc} \NC\NR
-\stopxmlsetups
-
-\startxmlsetups xs:bitrange
-  \xmldoifelse{#1}{/s:br-lo}{\xmlfirst{#1}{/s:br-lo}:\xmlfirst{#1}{/s:br-hi}}{\xmlfirst{#1}{/s:br-single}}
-\stopxmlsetups
-
-\startxmlsetups xbib:set
-  \xmlflush{#1}%
-  \startluacode
-    publications.enhancer.runner(publications.datasets["default"])
-  \stopluacode
-\stopxmlsetups
-
-\startluacode
-  function xml.functions.addbib(t)
-    local tag      = xml.attribute(t, ".", "id")
-    local category = xml.attribute(t, ".", "category")
-
-    local dict = {}
-    for f in xml.collected(t, "/bib:field") do
-      local k = xml.attribute(f, ".", "name")
-      dict[k] = xml.text(f)
-    end
-    dict.tag      = tag
-    dict.category = category
-
-    publications.loaders.lua("default", { [dict.tag] = dict, })
-  end
-\stopluacode
-
-\startxmlsetups xbib:entry
-  \xmlfunction{#1}{addbib}%
-\stopxmlsetups
+%term
+%link
+%cite
 
 
 %% CONFIGURATION                                                           {{{1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Font Fallback Hacks {{{2
+% -------------------
+%
 % TeX remains in the stone ages as far as font fallback support is concerned.
 % We have to manually list fallback ranges. This list of ranges is incomplete,
 % so this is terribly broken.
 \definefontfallback[cjk][name:ArialUnicodeMS][cjkunifiedideographs,cjksymbolsandpunctuation,cjkcompatibility,cjkunifiedideographsextensiona,hiragana,katakana,halfwidthandfullwidthforms,cyrillic]
 
-% Use Helvetica (actually, TeX Gyre Heros).
+% Use Helvetica (actually, TeX Gyre Heros) {{{2
+% ----------------------------------------
+%
+% For the "1970s computer manual" look.
 \definefontsynonym[Sans][heros][fallbacks=cjk]
-
 \loadtypescriptfile[texgyre]
 
+% Helvetica Math Hacks {{{2
+% --------------------
+%
+% Helvetica for text _and_ math; but use LM not cursor for monoo,
+% since cursor is a bit light.
 \starttypescriptcollection[myhvmath]
-  %\starttypescript[math][myhvmath]
-  %  \definefontsynonym[MathRoman][myhvmath@myhvmath-math]
-  %  \loadfontgoodies[myhvmath-math]
-  %\stoptypescript
-  % Helvetica for text _and_ math; but use LM not cursor for mono,
-  % since cursor is a bit light.
   \starttypescript[myhvmath]
-    \definetypeface[myhvmath][ss][sans][heros][default][rscale=1] %0.9
+    \definetypeface[myhvmath][ss][sans][heros][default][rscale=1]
     \definetypeface[myhvmath][rm][serif][termes][default]
     \definetypeface[myhvmath][tt][mono][modern][default][rscale=1.05]
-    %\definetypeface[myhvmath][mm][math][myhvmath][default][rscale=0.9]
     \definetypeface[myhvmath][mm][math][modern][default][rscale=1]
   \stoptypescript
 \stoptypescriptcollection
 
 \setupbodyfont[myhvmath,ss,12pt]
 
-% A4.
+% Paper Size {{{2
+% ----------
 \definepapersize[main][A4]
 \definepapersize[lmain][A4,landscape]
 \setuppapersize[main]
 
-% Layout.
+% Layout and Margins {{{2
+% ------------------
 \setuplayout[
   width=middle,
   height=middle,
@@ -686,31 +331,18 @@ $\xmlflushcontext{#1}$
   headerdistance=\bodyfontsize,
   topspace=0.5\bodyfontsize,
   leftmargin=5\bodyfontsize,
-  rightmargin=5\bodyfontsize
-  ]
+  rightmargin=5\bodyfontsize]
 \definelayout[lmain][
   width=\paperwidth,
   height=\paperheight,
-  backspace=0mm
-]
+  backspace=0mm]
+\setupwhitespace[small]
 
+% Structure and Heading Configuration {{{2
+% -----------------------------------
 \setupstructure[state=start,method=auto]
-\setupreferencing[left={},right={}]
+\definestructureconversionset[myconv][A,n,n,n,n,n,n,n][n]
 
-% Interaction.
-\setupinteraction[state=start,color=,contrastcolor=,style=normal]
-
-% Colours.
-\setupcolors[state=start]
-\definecolor[grey][r=.7,g=.7,b=.7]
-\definecolor[termgreen][r=0,g=.3333,b=0]
-\usemodule[tikz]
-\usetikzlibrary{positioning,shapes.misc,arrows,arrows.meta,patterns,graphs,fit,calc}
-
-%\setupbackend[export=yes]
-%\setupbackend[intent=ISO Uncoated,format=PDF/A-2a]
-
-% Headings.
 % Make chapter/section headings have the section number in the margin.
 \unexpanded\def\PlaceSection#1#2%
   {\goodbreak
@@ -720,40 +352,31 @@ $\xmlflushcontext{#1}$
       \inleftmargin{ #1}%
       #2}}
 
-\definestructureconversionset[myconv][A,n,n,n,n,n,n][n]
-\setupheads[part,chapter,section,subsection,subsubsection,subsubsubsection,subsubsubsubsection][sectionconversionset=myconv]
-\setuphead[chapter][sectionsegments=chapter,page=yes,before={\blank[10*big,force]},after=,style=\bfc,command=\PlaceSection]
-\setuphead[section][sectionsegments=chapter:subsubsubsubsection,style=\bf,before=,after=,margin=0mm,distance=0mm,textdistance=0mm,command=\PlaceSection,interlinespace=off,alternative=normal]
-\definehead[refsection][subsubsubsubsection]
-\setuphead[refsection][style=\tfc,page=yes,number=no,continue=no,incrementnumber=yes]
-\definehead[refsubsection][subsubsection]
-\setuphead[refsubsection][style=\bf,before={\blank[medium]},number=no]
+\setupheads[part,chapter,section,subsection,subsubsection,
+            subsubsubsection,subsubsubsubsection][sectionconversionset=myconv]
+\setuphead[chapter][sectionsegments=chapter,page=yes,
+                    before={\blank[10*big,force]},after=,
+                    style=\bfc,command=\PlaceSection]
+\setuphead[section][sectionsegments=chapter:subsubsubsubsection,style=\bf,
+                    before=,after=,margin=0mm,distance=0mm,textdistance=0mm,
+                    command=\PlaceSection,
+                    interlinespace=off,alternative=normal]
 
-\definesection[hpara-1]
-\definehead[hpara][section=hpara-1]
-\setuphead[hpara][number=no,incrementnumber=no,alternative=text,textdistance=1em,style=\bf,command={},commandafter={.}]
-%\setuphead[hpara][number=no,incrementnumber=no,alternative=text,textdistance=1em,command={},commandafter={.}]
-
-\definehead[masksection][section]
+%\setupitemgroup[itemize][left=\tfc,inbetween=]
+\definedescription[desc][headstyle=bold,style=normal,align=flushleft,
+                         alternative=hanging,width=broad,margin=1cm]
 
 \defineresetset[default][1,0,1][1]
 \setuphead[sectionresetset=default]
-\setupcaptions[location=top,prefix=yes,way=bychapter,prefixsegments=chapter] %]%,way=bysection,prefixsegments=chapter]
+\setupcaptions[location=top,prefix=yes,way=bychapter,prefixsegments=chapter]%way=bysection
 
-\definedescription[desc][headstyle=bold,style=normal,align=flushleft,alternative=hanging,width=broad,margin=1cm]
-\definedescription[AlsoGroupedDesc][headstyle=italic,style=normal,align=flushleft,alternative=top,width=broad,margin=0mm,distance=0mm,before=,after=,inbetween=]
+% Referencing {{{2
+% -----------
+\setupreferencing[left={},right={}]
+\usebtxdefinitions[apa]
 
-\setupitemgroup[itemize][left=\tfc,inbetween=]
-
-\defineitemgroup[AlsoList]
-\setupitemgroup[AlsoList][before=,after=\vskip3mm,inbetween=0mm,symbol=,left=,leftmargin=0mm,leftmargindistance=0mm,margin=0mm,width=0mm,distance=0mm,step=0mm,option=packed,textdistance=0mm,indenting=no]
-
-\defineitemgroup[CompactList]
-\setupitemgroup[CompactList][before=,after=,inbetween=0mm,option=packed]
-
-%\definecombinedlist[content][list={part,chapter,section,subsection,subsubsection,subsubsubsection,subsubsubsubsection,refsection}]
-
-% Header text.
+% Header Text {{{2
+% -----------
 \setupheadertexts[]
 \setupheadertexts[\setups{text a}][][][\setups{text b}]
 
@@ -762,8 +385,9 @@ $\xmlflushcontext{#1}$
   \hfill
   {\sc \getmarking[chapter]}
   \hfill
-  \llap{\sc \getvariable{document}{title}}}
+  \llap{\sc \getvariable{document}{title}}{}}
 \stopsetups
+
 \startsetups[text b]
   \framed[width=\textwidth,frame=off,bottomframe=on]{\rlap{\sc \getvariable{document}{title}}
   \hfill
@@ -772,27 +396,42 @@ $\xmlflushcontext{#1}$
   \llap{Page \pagenumber{} of \totalnumberofpages}}
 \stopsetups
 
-% Paragraph numbering.
-\unexpanded\def\NumPara#1%
-  {\inleftmargin{\color[grey]{¶#1}}%
-  }
+% Interaction {{{2
+% -----------
+\setupinteraction[state=start,color=,contrastcolor=,style=normal]
 
-\setupwhitespace[small]
+% Colors {{{2
+% ------
+\setupcolors[state=start]
 
-\usebtxdefinitions[apa]
-\setupbtx[interaction=start,color=black]
-\setupbtx[apa:cite:authoryear][etallimit=1,otherstext={ et al.},left={\[},right={\]},inbetween={\btxspace}]
-\setupbtx[apa:cite:authoryears][etallimit=1,otherstext={ et al.},inbetween={\btxspace}]
+% TikZ {{{2
+% ----
+\usemodule[tikz]
+\usetikzlibrary{positioning,shapes.misc,arrows,arrows.meta,patterns,graphs,fit,calc}
 
-%\setupbtx[default:cite][alternative=authoryear]
+% Verbatim Listings  {{{2
+% -----------------
+
+% 'Return' symbol for end of verbatim listings.
+\startreusableMPgraphic{return}
+  drawarrow
+    (0,0) --
+    (1EmWidth, 0) --
+    (1EmWidth, -.5ExHeight) --
+    (.5EmWidth, -.5ExHeight);
+\stopreusableMPgraphic
+\definesymbol[return][\reuseMPgraphic{return}]
+\def\vcrlf{\symbol[return]\crlf\strut\kern1em\strut\ignorespaces}
+
+% DEDOC Type {{{2
+% ----------
+\def\DEDOC{DEDOC}
 
 
 %% MAIN                                                                    {{{1
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \starttext
 \xmlprocessfile{dedoc}{\ArgInput}{}
-\startbackmatter
-\chapter{Bibliography}
-\placelistofpublications
-\stopbackmatter
+%\startbackmatter
+%\stopbackmatter
 \stoptext

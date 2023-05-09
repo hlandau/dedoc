@@ -23,3 +23,6 @@ MANDOC?=mandoc
 COL?=col
 GIT?=git
 FOP?=fop
+WGET?=wget
+LUALATEX?=lualatex
+LUALATEX_ARGS?=

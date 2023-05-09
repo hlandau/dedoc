@@ -1,0 +1,220 @@
+#!/usr/bin/env python3
+import sys, argparse, xml.dom.minidom as minidom, xml.dom as dom, pickle
+
+Node = minidom.Node
+
+ns = 'https://www.devever.net/ns/dtexml'
+pfx = '{%s}' % ns
+
+class CharMappingDatabase(object):
+    @classmethod
+    def load(cls, db_file):
+        o = cls()
+
+        with open(db_file, 'rb') as fi:
+            d = pickle.load(fi)
+
+            o._chars            = d['chars']
+            o._math_chars       = d['mathChars']
+            o._force_math_chars = d['forceMathChars']
+
+        return o
+
+    @classmethod
+    def create_from_xml(cls, unicode_xml_file):
+        o = cls()
+        udom = minidom.parse(unicode_xml_file)
+        chars = udom.documentElement.getElementsByTagName('character')
+
+        for char in chars:
+            charNo = char.getAttribute('dec')
+            if charNo.find('-') >= 0:
+                continue
+
+            charNo = int(charNo)
+            latex = list(char.getElementsByTagName('latex'))
+            mathlatex = list(char.getElementsByTagName('mathlatex'))
+
+            if len(latex) > 0:
+                o._chars[charNo] = latex[0].childNodes[0].data
+            if len(mathlatex) > 0:
+                o._math_chars[charNo] = mathlatex[0].childNodes[0].data
+
+        # Overkill to map space.
+        for ch in ' ':
+            ch_num = ord(ch)
+            if ch_num in o._chars:
+                del o._chars[ch_num]
+            if ch_num in o._math_chars:
+                del o._math_chars[ch_num]
+
+        for ch in '≥':
+            o._force_math_chars.add(ord(ch))
+
+        return o
+
+    def __init__(self):
+        self._chars             = {}
+        self._math_chars        = {}
+        self._force_math_chars  = set()
+
+    def save(self, db_file):
+        with open(db_file, 'wb') as fo:
+            pickle.dump(dict(chars=self._chars,
+                             mathChars=self._math_chars,
+                             forceMathChars=self._force_math_chars),
+                        fo, protocol=pickle.HIGHEST_PROTOCOL)
+
+    def resolve(self, ch_num, math=False):
+        if not isinstance(ch_num, int):
+            ch_num = ord(ch_num)
+
+        table = self._chars
+        wrap = None
+        if math or ch_num in self._force_math_chars:
+            table = self._math_chars
+            wrap = '\\ensuremath'
+
+        v = table.get(ch_num)
+        if v is not None:
+            if v.endswith(' '):
+                v = v.rstrip(' ') + '{}'
+        else:
+            v = chr(ch_num)
+
+        if wrap is not None:
+            v = wrap + '{' + v + '}'
+        return v
+
+class Processor(object):
+    def __init__(self, output_file, char_mapping_db):
+        self.fo                 = output_file
+        self.char_mapping_db    = char_mapping_db
+
+    def process(self, filename):
+        doc = minidom.parse(filename)
+        self._visit(doc.documentElement, root=True)
+
+    def _map_text(self, text, math=False):
+        return ''.join([self.char_mapping_db.resolve(ch, math) for ch in text])
+
+    def _visit(self, node, root=False, indent=0, raw=False):
+        if node.nodeType == Node.ELEMENT_NODE:
+            if raw:
+                raise Exception("cannot have element inside raw element")
+
+            if node.namespaceURI != ns:
+                for child in node.childNodes:
+                    self._visit(child, indent=indent+1)
+
+                return
+
+            if node.localName == 'dtexml' and not root:
+                raise Exception("dtexml element must be at root only")
+
+            if node.localName == 'cmd':
+                self.fo.write('\\')
+                self.fo.write(node.getAttribute('name'))
+                for child in node.childNodes:
+                    if child.nodeType == Node.ATTRIBUTE_NODE:
+                        continue
+                    self._visit(child, indent=indent+1)
+            elif node.localName == 'env':
+                self.fo.write('\\begin{')
+                self.fo.write(node.getAttribute('name'))
+                self.fo.write('}')
+
+                for child in node.childNodes:
+                    if child.nodeType == Node.ATTRIBUTE_NODE:
+                        continue
+                    self._visit(child, indent=indent+1)
+
+                self.fo.write('\\end{')
+                self.fo.write(node.getAttribute('name'))
+                self.fo.write('}')
+            elif node.localName == 'oarg':
+                self.fo.write('[')
+                for child in node.childNodes:
+                    self._visit(child, indent=indent+1)
+                self.fo.write(']')
+            elif node.localName == 'marg':
+                self.fo.write('{')
+                for child in node.childNodes:
+                    self._visit(child, indent=indent+1)
+                self.fo.write('}')
+            elif node.localName == 'math':
+                self.fo.write('$')
+                for child in node.childNodes:
+                    self._visit(child, indent=indent+1)
+                self.fo.write('$')
+            elif node.localName == 'group':
+                self.fo.write('{')
+                for child in node.childNodes:
+                    self._visit(child, indent=indent+1)
+                self.fo.write('}')
+            elif node.localName == 'raw':
+                for child in node.childNodes:
+                    self._visit(child, indent=indent+1, raw=True)
+            elif node.localName == 'comment':
+                for child in node.childNodes:
+                    self._visit_comment(child, indent=indent)
+            elif node.localName == 'dtexml':
+                for child in node.childNodes:
+                    self._visit(child, indent=indent)
+            else:
+                raise Exception("unknown element: %s" % node.localName)
+        elif node.nodeType == Node.TEXT_NODE:
+            self._visit_text(node.data, raw=raw)
+        elif node.nodeType == Node.COMMENT_NODE:
+            pass
+        else:
+            raise Exception("unexpected node type")
+
+    def _visit_text(self, text, raw=False):
+        text = self._map_text(text)
+        self.fo.write(text)
+
+    def _visit_comment(self, node, indent):
+        if node.nodeType == Node.TEXT_NODE:
+            self.fo.write(''.join(['%' + l.rstrip('\r\n') + '\n' for l in node.data.rstrip(' \t\r\n').split('\n')]))
+        else:
+            for child in node.childNodes:
+                self._visit_comment(child, indent=indent)
+
+def do_build_char_mapping_db(args):
+    db = CharMappingDatabase.create_from_xml(args['unicode-file'])
+    db.save(args['char-mapping-file'])
+    return 0
+
+def do_convert(args):
+    db = CharMappingDatabase.load(args['char_mapping_db'])
+    with open(args['output-file'], 'w', encoding='UTF-8') as fo:
+        p = Processor(char_mapping_db=db, output_file=fo)
+        p.process(args['input-file'])
+
+    return 0
+
+def run():
+    ap = argparse.ArgumentParser()
+    subap = ap.add_subparsers()
+
+    cmd_build = subap.add_parser('build-char-mapping-db', help='build a Unicode character mapping database from `unicode.xml`')
+    cmd_build.add_argument('unicode-file')
+    cmd_build.add_argument('char-mapping-file')
+    cmd_build.set_defaults(func=do_build_char_mapping_db)
+
+    cmd_convert = subap.add_parser('convert', help='convert a dtexml file to a TeX file')
+    cmd_convert.add_argument('input-file')
+    cmd_convert.add_argument('output-file')
+    cmd_convert.add_argument('-m', '--char-mapping-db', required=True)
+    cmd_convert.set_defaults(func=do_convert)
+
+    args = vars(ap.parse_args())
+    if 'func' not in args:
+        ap.print_usage()
+        return 2
+
+    return args['func'](args)
+
+if __name__ == '__main__':
+    sys.exit(run())

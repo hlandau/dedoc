@@ -9,7 +9,7 @@
 ###############################################################################
 DOCNAME?=
 BUILD_DIR?=build
-METHODS?=dedoc-guile pdf-context xhtml-single-xsl1 epub-xsl1 mdoc-xsl1 txt-roff-mdoc-xsl1 txt-mandoc-mdoc-xsl1 fo-xsl1 pdf-fop-fo-xsl1
+METHODS?=$(DEDOC_ALL_METHODS)
 
 
 ## INTERNAL CONFIGURATION
@@ -19,6 +19,8 @@ DEDOC_BASE?=$(shell cd "$(shell dirname "$(DEDOC_MAKEFILE_PATH)")/.."; pwd)
 DEDOC_COMPILED_SCHEMA_DIR?=$(DEDOC_BASE)/schema/build
 DEDOC_RNG?=$(DEDOC_COMPILED_SCHEMA_DIR)/dedoc.rng
 DEDOC_RNC?=$(DEDOC_COMPILED_SCHEMA_DIR)/dedoc.rnc
+DEDOC_ALL_METHODS=$(patsubst $(DEDOC_BASE)/methods/%/method.mk,%,$(wildcard $(DEDOC_BASE)/methods/*/method.mk))
+
 .DEFAULT_GOAL=all
 
 include $(DEDOC_BASE)/mk/support.mk

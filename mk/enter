@@ -1,3 +1,3 @@
 #!/bin/sh
 set -eo pipefail
-exec nix-shell -p guile libxml2 libxslt rnv xmlstarlet zip groff mandoc gnumake 'python3.withPackages(p: [p.lxml p.html5-parser])'
+exec nix-shell "$@" -p guile libxml2 libxslt rnv xmlstarlet zip groff mandoc gnumake 'python3.withPackages(p: [p.lxml p.html5-parser])' fop

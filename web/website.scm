@@ -76,14 +76,14 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
     (ul
       (li (p ,_DEDOC", an "(a (@ (href "schema/")) "XML schema")" for writing high-quality technical documentation
               while targeting multiple different output formats, including
-              XHTML, PDF, EPUB, man pages and plain text, while also being simpler and
+              XHTML, EPUB, man pages and plain text, while also being simpler and
               more focused than DocBook;"))
       (li (p ,_dedoc.scm", an environment for writing technical documentation in Scheme
               targeting the "DEDOC" schema, providing a friendlier writing
               environment for hypertext than writing XML directly and allowing
               procedural generation of content using arbitrary Scheme code;"))
       (li (p ,_dedoc-methods", a set of Makefile-driven methods for converting ",_DEDOC" files to various output formats,
-              such as high-quality PDF, XHTML, EPUB, plain text and man pages.")))
+              such as XHTML, EPUB, plain text and man pages.")))
 
     (p (strong "Scheme writing environment. ") "In short, ",_dedoc" is a system
        for writing natural-language technical documents using Scheme. By using
@@ -130,7 +130,10 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
        XHTML; "(em "and")" which can be consumed as PDFs and come across as
        documents which were designed for optimal consumption as PDFs. In other
        words, ",_dedoc" seeks to avoid any compromise as to the quality of the
-       output.")
+       output. This remains a work in progress, mainly due to the lack of any
+       open-source PDF typesetting solution which can produce an acceptable
+       quality of output in an unattended manner; thus PDF output is not yet
+       available.")
 
     (p (strong "Machine generation and readability. ") "Because documents are
        literally written in a full Scheme environment, the system is also
@@ -203,7 +206,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
          actually opening and closing a semantic construct, rather than closing
          and opening one.")
 
-      (p (strong "Scheme runtimes. ")"The full power of Scheme can be used to
+      (p (strong "Scheme runtime environment. ")"The full power of Scheme can be used to
          produce generated output. A ",_dedoc" document is simply a Scheme
          program which, when executed, outputs XML.")
 
@@ -216,10 +219,6 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
          The highest tier is Tier 1, which includes:")
 
       (ul
-        (li (tt "pdf-context")", which uses ",_context"'s XML input support
-            to generate high-quality PDF output directly from ",_DEDOC" XML.
-            A standard ",_context" XML template is included, though you can
-            always provide your own or customise the included one. Requires ",_context".")
         (li (tt "xhtml-single-xsl1")", which produces a single XHTML file
             from ",_DEDOC" XML using an XSLT1 transform. Uses "(tt "xsltproc")".")
         (li (tt "epub-xsl1")", which produces an EPUB file from ",_DEDOC" XML
@@ -243,7 +242,7 @@ set -e; exec guile --fresh-auto-compile --no-auto-compile -L "$(dirname "$0")" -
           to be used for their plain text output. Since they are also capable of producing
           PostScript, PDF and (X)HTML output, this functionality is also exposed for
           demonstration purposes, however this output will not be as high quality as
-          the dedicated PDF and XHTML methods above.")
+          the dedicated methods above.")
 
       (p (strong "Current usage. "),_dedoc" is used to produce the documentation for ",_acmetool".")
       (p "To get started, try the "(a (@ (href "tutorial")) "tutorial")" or examine some of the "(a (@ (href "examples")) "example documents.")" For a more elaborate example of ",_dedoc"'s output, see the "(a (@ (href "https://www.devever.net/~hl/acmetool/")) ,_acmetool" manual."))))
@@ -370,7 +369,6 @@ $ dedoc")
 (define (output-links name)
   `(ul (@ (class "outputs")) ,@(map (lambda (k) `(li (a (@ (href ,(string-append "example-output/" name "/dd-doc" (car k)))) ,(cdr k)))) `(
     (".pretty.xml" . "DEDOC XML")
-    (".pdf" . "PDF")
     (".xhtml-single" . "XHTML (single file)")
     (".epub" . "EPUB")
     ,@(if (car (assoc-ref example-descriptions name))

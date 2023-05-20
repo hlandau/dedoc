@@ -2,6 +2,5 @@
 set -eo pipefail
 export SELF_PATH="$(realpath "$(dirname "$0")")"
 exec nix-shell "$@" --command '. "$SELF_PATH/dedoc-shell.sh"; return' \
-  -p guile libxml2 libxslt rnv xmlstarlet zip groff mandoc gnumake \
-     'python3.withPackages(p: [p.lxml p.html5-parser])' \
-     texlive.combined.scheme-medium
+  -p guile libxml2 libxslt rnv xmlstarlet zip groff mandoc gnumake ghostscript \
+     'python3.withPackages(p: [p.lxml p.html5-parser])'

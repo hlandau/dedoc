@@ -19,7 +19,8 @@ DEDOC_BASE?=$(shell cd "$(shell dirname "$(DEDOC_MAKEFILE_PATH)")/.."; pwd)
 DEDOC_COMPILED_SCHEMA_DIR?=$(DEDOC_BASE)/schema/build
 DEDOC_RNG?=$(DEDOC_COMPILED_SCHEMA_DIR)/dedoc.rng
 DEDOC_RNC?=$(DEDOC_COMPILED_SCHEMA_DIR)/dedoc.rnc
-DEDOC_ALL_METHODS=$(patsubst $(DEDOC_BASE)/methods/%/method.mk,%,$(wildcard $(DEDOC_BASE)/methods/*/method.mk))
+DEDOC_ALL_METHODS_UNSORTED=$(patsubst $(DEDOC_BASE)/methods/%/method.mk,%,$(wildcard $(DEDOC_BASE)/methods/*/method.mk))
+DEDOC_ALL_METHODS=$(shell echo "$(sort $(shell for x in $(DEDOC_ALL_METHODS_UNSORTED); do w=$$(grep -Eo '^#!priority=([0-9][0-9])' "$(DEDOC_BASE)/methods/$$x/method.mk" || true); if [ -n "$$w" ]; then w=$$(echo "$$w" | sed 's/#!priority=//'); else w=00; fi; echo "$$w/$$x"; done))" | sed 's#[0-9][0-9]/##g')
 
 .DEFAULT_GOAL=all
 

@@ -51,9 +51,9 @@ jobs:
           mkdir website
           (cd website; tar xvf ../website-artifacts/artifact.tar;)
           mkdir -p ~/.ssh
-          echo 'ariel.devever.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIG6lUHCBObuFbUqPa3/gE9JqDieMchKIvRlAD0VOUhaL' >> ~/.ssh/known_hosts
+          echo 'triton.devever.net ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGC+Ii5sJSxYI4SOEhswtAExFz77qzGYz4nhhWJgwP2s' >> ~/.ssh/known_hosts
           umask 077
           rm -f ssh_key
           echo "$SSH_KEY" > ssh_key
-          rsync -e 'ssh -i ssh_key' -av --delete website/ dedocweb@ariel.devever.net:./
+          rsync -e 'ssh -i ssh_key' -av --delete website/ dedocweb@triton.devever.net:./
           shred -u ssh_key

@@ -1,5 +1,6 @@
 ## METHOD: xhtml-single-xsl1
 ###############################################################################
+#!priority=10
 METHOD_XHTML_SINGLE_XSL1_DIR=$(DEDOC_BASE)/methods/xhtml-single-xsl1/
 METHOD_XHTML_SINGLE_XSL1_XSL=$(METHOD_XHTML_SINGLE_XSL1_DIR)/dedoc-xhtml.xsl
 METHOD_XHTML_SINGLE_XSL1_CSS=$(METHOD_XHTML_SINGLE_XSL1_DIR)/dedoc-xhtml.css

@@ -16,7 +16,8 @@ jobs:
       - name: Build DEDOC Schema and Website
         run: |
           nix-shell --run .github/build-docs -p guile libxml2 libxslt rnv xmlstarlet zip groff \
-            mandoc gnumake sass 'python3.withPackages(p: [p.lxml p.html5-parser])'
+            mandoc gnumake sass 'python3.withPackages(p: [p.lxml p.html5-parser])' \
+            texlive.combined.scheme-medium
       - name: Upload Website Artifacts
         uses: actions/upload-pages-artifact@v1
         # We don't actually use GH pages, but this allows the website files to
